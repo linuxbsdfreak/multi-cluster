@@ -1,0 +1,120 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fjjs5twp8v
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: tenants
+  namespace: fjjs5twp8v
+spec:
+  interval: 1h
+  retryInterval: 3m
+  timeout: 5m
+  prune: true
+  wait: true
+  path: ./flux2-hub-spoke/clusters/fjjs5twp8v/tenants
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  kubeConfig:
+    secretRef:
+      name: fjjs5twp8v-cluster-kubeconfig
+  postBuild:
+    substitute:
+      CLUSTER_NAME: fjjs5twp8v
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-controllers
+  namespace: fjjs5twp8v
+spec:
+  dependsOn:
+    - name: tenants
+  targetNamespace: fjjs5twp8v
+  interval: 1h
+  retryInterval: 3m
+  timeout: 5m
+  prune: true
+  wait: true
+  path: ./flux2-hub-spoke/fjjs5twp8v/infra-controllers
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: kyverno
+      namespace: kyverno
+  patches:
+    - target:
+        kind: HelmRelease
+      patch: |
+        - op: add
+          path: /spec/kubeConfig
+          value:
+            secretRef:
+              name: fjjs5twp8v-cluster-kubeconfig
+        - op: add
+          path: /spec/serviceAccountName
+          value: flux-cluster-admin
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-roles-bindings
+  namespace: fjjs5twp8v
+spec:
+  dependsOn:
+    - name: infra-controllers
+  targetNamespace: fjjs5twp8v
+  interval: 1h
+  retryInterval: 3m
+  timeout: 5m
+  prune: true
+  wait: true
+  path: ./flux2-hub-spoke/fjjs5twp8v/infra-roles-bindings
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  kubeConfig:
+    secretRef:
+      name: fjjs5twp8v-cluster-kubeconfig
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: apps
+  namespace: fjjs5twp8v
+spec:
+  dependsOn:
+    - name: infra-controllers
+  targetNamespace: fjjs5twp8v
+  interval: 1h
+  retryInterval: 3m
+  timeout: 5m
+  prune: true
+  wait: true
+  path: ./flux2-hub-spoke/fjjs5twp8v/apps
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  patches:
+    - target:
+        kind: HelmRelease
+      patch: |-
+        - op: add
+          path: /spec/kubeConfig
+          value:
+            secretRef:
+              name: fjjs5twp8v-cluster-kubeconfig
+        - op: add
+          path: /spec/serviceAccountName
+          value: flux-restricted

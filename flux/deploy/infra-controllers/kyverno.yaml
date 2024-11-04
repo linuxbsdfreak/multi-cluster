@@ -1,0 +1,33 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: kyverno
+spec:
+  interval: 30m
+  url: https://kyverno.github.io/kyverno
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: kyverno
+  namespace: kyverno
+spec:
+  targetNamespace: kyverno
+  storageNamespace: kyverno
+  releaseName: kyverno
+  interval: 12m
+  chart:
+    spec:
+      chart: kyverno
+      version: '>=v3.3.0'
+      sourceRef:
+        kind: HelmRepository
+        name: kyverno
+  install:
+    remediation:
+      retries: 3
+  values:
+    replicaCount: 3
+    config:
+      resourceFilters: []

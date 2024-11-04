@@ -1,0 +1,18 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: podinfo
+spec:
+  chart:
+    spec:
+      version: '>=6.7.1'
+  test:
+    enable: false
+  values:
+    ingress:
+      hosts:
+        - host: podinfo.kyma.wk1
+          paths:
+            - path: /
+              pathType: ImplementationSpecific
