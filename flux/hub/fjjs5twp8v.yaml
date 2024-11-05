@@ -1,4 +1,3 @@
----
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -22,7 +21,7 @@ spec:
     namespace: flux-system
   kubeConfig:
     secretRef:
-      name: fjjs5twp8v-cluster-kubeconfig
+      name: cluster-kubeconfig
   postBuild:
     substitute:
       CLUSTER_NAME: fjjs5twp8v
@@ -41,16 +40,11 @@ spec:
   timeout: 5m
   prune: true
   wait: true
-  path: ./flux/fjjs5twp8v/infra-controllers
+  path: ./flux/clusters/fjjs5twp8v/infra-controllers
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  healthChecks:
-    - apiVersion: apps/v1
-      kind: Deployment
-      name: kyverno
-      namespace: kyverno
   patches:
     - target:
         kind: HelmRelease
@@ -59,7 +53,7 @@ spec:
           path: /spec/kubeConfig
           value:
             secretRef:
-              name: fjjs5twp8v-cluster-kubeconfig
+              name: cluster-kubeconfig
         - op: add
           path: /spec/serviceAccountName
           value: flux-cluster-admin
@@ -67,7 +61,7 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: infra-roles-bindings
+  name: infra-configs
   namespace: fjjs5twp8v
 spec:
   dependsOn:
@@ -78,14 +72,14 @@ spec:
   timeout: 5m
   prune: true
   wait: true
-  path: ./flux/fjjs5twp8v/infra-roles-bindings
+  path: ./flux/clusters/fjjs5twp8v/infra-configs
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   kubeConfig:
     secretRef:
-      name: fjjs5twp8v-cluster-kubeconfig
+      name: cluster-kubeconfig
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -94,14 +88,14 @@ metadata:
   namespace: fjjs5twp8v
 spec:
   dependsOn:
-    - name: infra-controllers
+    - name: infra-configs
   targetNamespace: fjjs5twp8v
   interval: 1h
   retryInterval: 3m
   timeout: 5m
   prune: true
   wait: true
-  path: ./flux/fjjs5twp8v/apps
+  path: ./flux/clusters/fjjs5twp8v/apps
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -109,12 +103,12 @@ spec:
   patches:
     - target:
         kind: HelmRelease
-      patch: |-
+      patch: |
         - op: add
           path: /spec/kubeConfig
           value:
             secretRef:
-              name: fjjs5twp8v-cluster-kubeconfig
+              name: cluster-kubeconfig
         - op: add
           path: /spec/serviceAccountName
           value: flux-restricted

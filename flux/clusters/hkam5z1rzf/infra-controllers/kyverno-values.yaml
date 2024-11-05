@@ -11,10 +11,10 @@ spec:
     enable: false
   values:
     admissionController:
-      replicas: 3
+      replicas: 1
     backgroundController:
-      replicas: 2
+      replicas: 1
     reportsController:
-      replicas: 2
+      replicas: 1
     cleanupController:
-      replicas: 2
+      replicas: 1
