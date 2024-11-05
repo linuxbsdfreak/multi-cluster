@@ -13,7 +13,7 @@ metadata:
   name: kyverno
 spec:
   targetNamespace: kyverno
-  storageNamespace: kyverno
+  #storageNamespace: kyverno
   releaseName: kyverno
   interval: 2m
   chart:
