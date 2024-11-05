@@ -35,7 +35,7 @@ spec:
   dependsOn:
     - name: tenants
   targetNamespace: hkam5z1rzf
-  interval: 1h
+  interval: 1m
   retryInterval: 3m
   timeout: 5m
   prune: true
@@ -67,7 +67,7 @@ spec:
   dependsOn:
     - name: infra-controllers
   targetNamespace: hkam5z1rzf
-  interval: 1h
+  interval: 1m
   retryInterval: 3m
   timeout: 5m
   prune: true
@@ -90,7 +90,7 @@ spec:
   dependsOn:
     - name: infra-configs
   targetNamespace: hkam5z1rzf
-  interval: 1h
+  interval: 1m
   retryInterval: 3m
   timeout: 5m
   prune: true
