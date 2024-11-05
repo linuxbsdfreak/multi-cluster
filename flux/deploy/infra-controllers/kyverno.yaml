@@ -28,3 +28,12 @@ spec:
   install:
     remediation:
       retries: 3
+  values:
+    admissionController:
+      replicas: 1
+    backgroundController:
+      replicas: 1
+    reportsController:
+      replicas: 1
+    cleanupController:
+      replicas: 1
