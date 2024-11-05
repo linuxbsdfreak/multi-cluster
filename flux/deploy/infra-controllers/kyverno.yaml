@@ -16,7 +16,7 @@ spec:
   targetNamespace: kyverno
   storageNamespace: kyverno
   releaseName: kyverno
-  interval: 5m
+  interval: 2m
   chart:
     spec:
       chart: kyverno
