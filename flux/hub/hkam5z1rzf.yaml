@@ -15,7 +15,7 @@ spec:
   timeout: 2m
   prune: true
   wait: true
-  path: ./flux2-hub-spoke/clusters/hkam5z1rzf/tenants
+  path: ./flux/clusters/hkam5z1rzf/tenants
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -41,7 +41,7 @@ spec:
   timeout: 5m
   prune: true
   wait: true
-  path: ./flux2-hub-spoke/clusters/hkam5z1rzf/infra-controllers
+  path: ./flux/clusters/hkam5z1rzf/infra-controllers
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -73,7 +73,7 @@ spec:
   timeout: 5m
   prune: true
   wait: true
-  path: ./flux2-hub-spoke/clusters/hkam5z1rzf/infra-roles-bindings
+  path: ./flux/clusters/hkam5z1rzf/infra-roles-bindings
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -96,7 +96,7 @@ spec:
   timeout: 5m
   prune: true
   wait: true
-  path: ./flux2-hub-spoke/clusters/hkam5z1rzf/apps
+  path: ./flux/clusters/hkam5z1rzf/apps
   sourceRef:
     kind: GitRepository
     name: flux-system
