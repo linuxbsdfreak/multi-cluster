@@ -3,5 +3,9 @@ kind: Kustomization
 resources:
   - ../../../deploy/infra-controllers
 patches:
-- kyverno-values.yaml
-- keda-values.yaml
+  - path: kyverno-values.yaml
+    target:
+      kind: HelmRelease
+  - path: keda-values.yaml
+    target:
+      kind: HelmRelease
