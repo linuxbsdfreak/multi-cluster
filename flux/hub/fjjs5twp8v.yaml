@@ -9,7 +9,7 @@ metadata:
   name: tenants
   namespace: fjjs5twp8v
 spec:
-  interval: 1h
+  interval: 1m
   retryInterval: 3m
   timeout: 5m
   prune: true
@@ -35,8 +35,8 @@ spec:
   dependsOn:
     - name: tenants
   targetNamespace: fjjs5twp8v
-  interval: 1h
-  retryInterval: 3m
+  interval: 1m
+  retryInterval: 1m
   timeout: 5m
   prune: true
   wait: true
@@ -45,6 +45,23 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: kyverno-admission-controller
+      namespace: kyverno
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: kyverno-background-controller
+      namespace: kyverno
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: kyverno-background-controller
+      namespace: kyverno
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: kyverno
+      namespace: kyverno-reports-controller                 
   patches:
     - target:
         kind: HelmRelease
@@ -67,7 +84,7 @@ spec:
   dependsOn:
     - name: infra-controllers
   targetNamespace: fjjs5twp8v
-  interval: 1h
+  interval: 1m
   retryInterval: 3m
   timeout: 5m
   prune: true
