@@ -6,15 +6,12 @@ patches:
   - path: kyverno-values.yaml
     target:
       kind: HelmRelease
-      metadata:
-        name: kyverno
+      name: kyverno
   - path: eso-values.yaml
     target:
       kind: HelmRelease
-      metadata:
-        name: eso       
+      name: eso       
   - path: keda-values.yaml
     target:
       kind: HelmRelease
-      metadata:
-        name: keda
+      name: keda
