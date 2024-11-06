@@ -15,3 +15,7 @@ patches:
     target:
       kind: HelmRelease
       name: keda
+  - path: reloader-values.yaml
+    target:
+      kind: HelmRelease
+      name: reloader    
