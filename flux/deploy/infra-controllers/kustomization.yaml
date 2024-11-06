@@ -1,4 +1,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - kyverno.yaml
+  - kyverno/namespace.yaml
+  - kyverno/helm-repo.yaml
+  - kyverno/helm-release.yaml
+  - external-secrets/namespace.yaml
+  - external-secrets/helm-repo.yaml
+  - external-secrets/helm-release.yaml
+  - keda/namespace.yaml
+  - keda/helm-repo.yaml
+  - keda/helm-release.yaml

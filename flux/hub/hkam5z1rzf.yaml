@@ -45,6 +45,23 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: kyverno-admission-controller
+      namespace: kyverno
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: kyverno-background-controller
+      namespace: kyverno
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: kyverno-background-controller
+      namespace: kyverno
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: kyverno
+      namespace: kyverno-reports-controller                 
   patches:
     - target:
         kind: HelmRelease
