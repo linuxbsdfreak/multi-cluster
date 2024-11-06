@@ -5,4 +5,5 @@ resources:
   - kyverno.yaml
   - eso.yaml
   - keda.yaml
+  - reloader.yaml
   - podinfo.yaml

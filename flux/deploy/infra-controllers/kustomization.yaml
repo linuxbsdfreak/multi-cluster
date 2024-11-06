@@ -7,6 +7,5 @@ resources:
   - eso/helm-release.yaml
   - keda/helm-repo.yaml
   - keda/helm-release.yaml
-  - reloader/namespace.yaml
   - reloader/helm-repo.yaml
   - reloader/helm-release.yaml
