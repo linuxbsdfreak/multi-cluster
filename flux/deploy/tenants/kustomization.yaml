@@ -3,6 +3,6 @@ kind: Kustomization
 resources:
   - flux.yaml
   - kyverno.yaml
-  #- external-secrets.yaml
+  - eso.yaml
   - keda.yaml
   - podinfo.yaml
