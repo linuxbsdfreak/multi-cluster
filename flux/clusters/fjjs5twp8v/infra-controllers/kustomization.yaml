@@ -2,3 +2,20 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../../deploy/infra-controllers
+patches:
+  - path: kyverno-values.yaml
+    target:
+      kind: HelmRelease
+      name: kyverno
+  - path: eso-values.yaml
+    target:
+      kind: HelmRelease
+      name: eso       
+  - path: keda-values.yaml
+    target:
+      kind: HelmRelease
+      name: keda
+  - path: reloader-values.yaml
+    target:
+      kind: HelmRelease
+      name: reloader    
