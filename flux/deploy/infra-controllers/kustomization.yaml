@@ -3,7 +3,8 @@ kind: Kustomization
 resources:
   - kyverno/helm-repo.yaml
   - kyverno/helm-release.yaml
-  #- external-secrets/helm-repo.yaml
-  #- external-secrets/helm-release.yaml
+  - eso/namespace.yaml
+  - eso/helm-repo.yaml
+  - eso/helm-release.yaml
   - keda/helm-repo.yaml
   - keda/helm-release.yaml

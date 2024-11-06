@@ -6,6 +6,9 @@ patches:
   - path: kyverno-values.yaml
     target:
       kind: HelmRelease
+  - path: eso-values.yaml
+    target:
+      kind: HelmRelease      
   - path: keda-values.yaml
     target:
       kind: HelmRelease
