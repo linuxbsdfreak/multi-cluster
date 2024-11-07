@@ -17,4 +17,4 @@ spec:
     reportsController:
       replicas: 2
     cleanupController:
-      replicas: 2
+      replicas: 3
