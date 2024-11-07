@@ -14,14 +14,10 @@ patches:
   - path: keda-values.yaml
     target:
       kind: HelmRelease
-      name: keda
-  - path: reloader-values.yaml
-    target:
-      kind: HelmRelease
-      name: reloader      
+      name: keda    
 configMapGenerator:
   - name: reloader-helm-chart-value-overrides
     files:
-      - values.yaml=reloader-helm-chart-value-overrides.yaml
+      - reloader-helm-chart-value-overrides.yaml
 configurations:
   - kustomizeconfig.yaml
