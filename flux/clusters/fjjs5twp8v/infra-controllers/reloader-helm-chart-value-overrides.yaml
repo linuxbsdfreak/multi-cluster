@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: reloader-helm-chart-value-overrides
 data:
-  values.yaml: |-
+  values.yaml: |
     reloader:
       deployment:
         replicas: 2
