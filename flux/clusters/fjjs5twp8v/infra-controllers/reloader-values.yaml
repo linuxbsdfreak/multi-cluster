@@ -12,3 +12,4 @@ spec:
   valuesFrom:
   - kind: ConfigMap
     name: reloader-helm-chart-value-overrides
+    valuesKey: values.yaml
