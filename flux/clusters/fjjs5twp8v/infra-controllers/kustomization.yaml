@@ -17,7 +17,7 @@ patches:
       name: keda    
 configMapGenerator:
   - name: reloader-helm-chart-value-overrides
-    files:
-      - reloader-helm-chart-value-overrides.yaml
+    files: 
+      - values.yaml=reloader-helm-chart-value-overrides.yaml
 configurations:
   - kustomizeconfig.yaml
