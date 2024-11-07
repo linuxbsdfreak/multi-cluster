@@ -10,6 +10,5 @@ spec:
   test:
     enable: false
   values:
-    reloader:
-      deployment:
-        replicas: 3
+    deployment:
+      replicas: 2
