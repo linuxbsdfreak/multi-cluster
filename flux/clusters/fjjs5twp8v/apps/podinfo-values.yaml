@@ -9,7 +9,7 @@ spec:
   test:
     enable: false
   values:
-    replicaCount: 5
+    replicaCount: 1
     ingress:
       hosts:
         - host: podinfo.fjjs5twp8v
