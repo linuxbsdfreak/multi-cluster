@@ -23,4 +23,3 @@ configMapGenerator:
   - name: reloader-helm-chart-value-overrides
     files:
       - values.yaml=reloader-helm-chart-value-overrides.yaml
-      
