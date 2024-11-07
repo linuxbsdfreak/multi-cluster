@@ -1,4 +1,3 @@
-values.yaml: |-
-  reloader:
-    deployment:
-      replicas: 2
+reloader:
+  deployment:
+    replicas: 2
