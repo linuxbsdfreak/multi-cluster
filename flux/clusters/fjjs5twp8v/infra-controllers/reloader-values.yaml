@@ -13,7 +13,3 @@ spec:
   - kind: ConfigMap
     name: reloader-helm-chart-value-overrides
     valuesKey: values.yaml    
-  # values:
-  #   reloader:
-  #     deployment:
-  #       replicas: 2
