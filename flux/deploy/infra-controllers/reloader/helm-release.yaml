@@ -12,7 +12,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: stakater
-  interval: 2m
+  interval: 1m
   install:
     remediation:
       retries: 3
