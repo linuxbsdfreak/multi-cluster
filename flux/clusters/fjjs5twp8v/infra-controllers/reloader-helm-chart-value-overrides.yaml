@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: reloader-helm-chart-value-overrides
+data:
+  values.yaml: |-
+    reloader:
+      deployment:
+        replicas: 3

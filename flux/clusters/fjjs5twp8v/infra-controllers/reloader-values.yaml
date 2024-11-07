@@ -9,7 +9,11 @@ spec:
       version: '>=v1.1.0'
   test:
     enable: false
-  values:
-    reloader:
-      deployment:
-        replicas: 2
+  valuesFrom:
+  - kind: ConfigMap
+    name: reloader-helm-chart-value-overrides
+    valuesKey: values.yaml    
+  # values:
+  #   reloader:
+  #     deployment:
+  #       replicas: 2

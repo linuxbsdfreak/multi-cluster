@@ -10,7 +10,7 @@ patches:
   - path: eso-values.yaml
     target:
       kind: HelmRelease
-      name: eso       
+      name: eso
   - path: keda-values.yaml
     target:
       kind: HelmRelease
@@ -18,4 +18,4 @@ patches:
   - path: reloader-values.yaml
     target:
       kind: HelmRelease
-      name: reloader    
+      name: reloader
