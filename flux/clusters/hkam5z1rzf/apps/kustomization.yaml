@@ -2,8 +2,42 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../../deploy/apps
+
+resources:
+  - clustersecretstore.yaml
+
 patches:
   - path: podinfo-values.yaml
     target:
       kind: HelmRelease
       name: podinfo
+
+vars:
+  - name: VAULT_SERVER
+    objref:
+      kind: ConfigMap
+      name: vault-config
+      apiVersion: v1
+    fieldref:
+      fieldpath: data.server
+  - name: VAULT_PATH
+    objref:
+      kind: ConfigMap
+      name: vault-config
+      apiVersion: v1
+    fieldref:
+      fieldpath: data.path
+  - name: VAULT_MOUNT_PATH
+    objref:
+      kind: ConfigMap
+      name: vault-config
+      apiVersion: v1
+    fieldref:
+      fieldpath: data.mountPath
+
+configMapGenerator:
+  - name: vault-config
+    literals:
+      - server=https://vault.example.com
+      - path=hc-dev/static
+      - mountPath=hc-dev/hkam5z1rzf/

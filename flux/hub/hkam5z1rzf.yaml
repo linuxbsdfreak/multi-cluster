@@ -61,7 +61,19 @@ spec:
     - apiVersion: apps/v1
       kind: Deployment
       name: kyverno
-      namespace: kyverno-reports-controller                 
+      namespace: kyverno-reports-controller
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: eso-external-secrets
+      namespace: eso
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: eso-external-secrets-cert-controller
+      namespace: eso
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: eso-external-secrets-webhook
+      namespace: eso     
   patches:
     - target:
         kind: HelmRelease
