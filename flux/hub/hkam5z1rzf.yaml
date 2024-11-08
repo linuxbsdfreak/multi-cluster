@@ -73,7 +73,7 @@ spec:
     - apiVersion: apps/v1
       kind: Deployment
       name: eso-external-secrets-webhook
-      namespace: eso     
+      namespace: eso
   patches:
     - target:
         kind: HelmRelease

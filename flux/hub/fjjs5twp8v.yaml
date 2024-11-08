@@ -61,7 +61,19 @@ spec:
     - apiVersion: apps/v1
       kind: Deployment
       name: kyverno
-      namespace: kyverno-reports-controller                 
+      namespace: kyverno-reports-controller
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: eso-external-secrets
+      namespace: eso
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: eso-external-secrets-cert-controller
+      namespace: eso
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: eso-external-secrets-webhook
+      namespace: eso
   patches:
     - target:
         kind: HelmRelease
@@ -78,11 +90,34 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps
+  name: infra-configs
   namespace: fjjs5twp8v
 spec:
   dependsOn:
     - name: infra-controllers
+  targetNamespace: fjjs5twp8v
+  interval: 1m
+  retryInterval: 1m
+  timeout: 5m
+  prune: true
+  wait: false
+  path: ./flux/clusters/fjjs5twp8v/infra-configs
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  kubeConfig:
+    secretRef:
+      name: fjjs5twp8v-cluster-kubeconfig
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: apps
+  namespace: fjjs5twp8v
+spec:
+  dependsOn:
+    - name: infra-configs
   targetNamespace: fjjs5twp8v
   interval: 1m
   retryInterval: 3m
