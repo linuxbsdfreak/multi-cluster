@@ -22,3 +22,5 @@ subjects:
   - kind: ServiceAccount
     name: flux-restricted
     namespace: "${CLUSTER_NAME}"
+
+# a rolebinding to a clusterrole is a special thing clusterrole cluster-admin has full cluster-wide access to every resource kind but rolebinding is a namespaced binding so the rolebinding to clusterrole cluster-admin just has full permission inside of a given namespace, no cluster scoped resources so, this is suitable for a tenant who shouldn’t be able to cause changes outside of their namespace, but not for a flux instance which needs to be able to write CRDs on the cluster the flux instance needs a clusterrolebinding to the clusterrole admin so it can manage the whole cluster, namespaces, crds, cluster scoped resources tenants should only get access to namespace scoped resources in their namespaces the infrastructure kustomizations also need this clusterrolebinding because they have helmreleases which install crds, etc.
