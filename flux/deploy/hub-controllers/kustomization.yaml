@@ -5,4 +5,3 @@ resources:
   - projectsveltos/helm-release.yaml
   - eso/helm-repo.yaml
   - eso/helm-release.yaml  
-  - projectsveltos/ui.yaml
