@@ -78,6 +78,18 @@ spec:
       kind: Deployment
       name: shard-controller
       namespace: projectsveltos
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: eso-external-secrets
+      namespace: eso
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: eso-external-secrets-cert-controller
+      namespace: eso
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: eso-external-secrets-webhook
+      namespace: eso      
   patches:
     - target:
         kind: HelmRelease
@@ -90,3 +102,26 @@ spec:
         - op: add
           path: /spec/serviceAccountName
           value: flux-cluster-admin
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: hub-configs
+  namespace: hub
+spec:
+  dependsOn:
+    - name: hub-controllers
+  targetNamespace: hub
+  interval: 1m
+  retryInterval: 1m
+  timeout: 5m
+  prune: true
+  wait: false
+  path: ./flux/clusters/hub/hub-configs
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  kubeConfig:
+    secretRef:
+      name: hub-cluster-kubeconfig      
