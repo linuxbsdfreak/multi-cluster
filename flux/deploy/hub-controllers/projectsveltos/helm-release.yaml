@@ -1,0 +1,19 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: projectsveltos
+spec:
+  targetNamespace: projectsveltos
+  storageNamespace: projectsveltos
+  releaseName: projectsveltos
+  chart:
+    spec:
+      chart: projectsveltos
+      sourceRef:
+        kind: HelmRepository
+        name: projectsveltos
+  interval: 5m
+  timeout: 5m
+  upgrade:
+    remediation:
+      retries: 3
