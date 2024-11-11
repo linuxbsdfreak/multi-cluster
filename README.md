@@ -1,2 +1,2 @@
 # multi-cluster
-MultiCluster Flux Operator
+MultiCluster with Flux Operator
