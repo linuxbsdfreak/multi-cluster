@@ -87,29 +87,29 @@ spec:
           path: /spec/serviceAccountName
           value: flux-cluster-admin
 ---
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: infra-configs
-  namespace: fjjs5twp8v
-spec:
-  dependsOn:
-    - name: infra-controllers
-  targetNamespace: fjjs5twp8v
-  interval: 1m
-  retryInterval: 1m
-  timeout: 5m
-  prune: true
-  wait: false
-  path: ./flux/clusters/fjjs5twp8v/infra-configs
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  kubeConfig:
-    secretRef:
-      name: fjjs5twp8v-cluster-kubeconfig
----
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: infra-configs
+#   namespace: fjjs5twp8v
+# spec:
+#   dependsOn:
+#     - name: infra-controllers
+#   targetNamespace: fjjs5twp8v
+#   interval: 1m
+#   retryInterval: 1m
+#   timeout: 5m
+#   prune: true
+#   wait: false
+#   path: ./flux/clusters/fjjs5twp8v/infra-configs
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+#     namespace: flux-system
+#   kubeConfig:
+#     secretRef:
+#       name: fjjs5twp8v-cluster-kubeconfig
+#---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -117,7 +117,8 @@ metadata:
   namespace: fjjs5twp8v
 spec:
   dependsOn:
-    - name: infra-configs
+    #- name: infra-configs
+    - name: infra-controllers
   targetNamespace: fjjs5twp8v
   interval: 1m
   retryInterval: 3m

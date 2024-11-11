@@ -7,10 +7,10 @@ patches:
     target:
       kind: HelmRelease
       name: kyverno
-  - path: eso-values.yaml
-    target:
-      kind: HelmRelease
-      name: eso       
+  # - path: eso-values.yaml
+  #   target:
+  #     kind: HelmRelease
+  #     name: eso       
   - path: keda-values.yaml
     target:
       kind: HelmRelease

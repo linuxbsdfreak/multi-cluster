@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
   - flux.yaml
   - kyverno.yaml
-  - eso.yaml
+#  - eso.yaml
   - keda.yaml
   - reloader.yaml
   - podinfo.yaml
