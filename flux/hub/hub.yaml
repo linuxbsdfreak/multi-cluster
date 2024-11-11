@@ -58,10 +58,10 @@ spec:
       kind: Deployment
       name: classifier-manager
       namespace: projectsveltos
-    - apiVersion: apps/v1
-      kind: Deployment
-      name: conversion-webhook
-      namespace: projectsveltos
+    # - apiVersion: apps/v1
+    #   kind: Deployment
+    #   name: conversion-webhook
+    #   namespace: projectsveltos
     - apiVersion: apps/v1
       kind: Deployment
       name: event-manager
