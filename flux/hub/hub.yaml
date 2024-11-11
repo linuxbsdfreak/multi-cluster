@@ -45,11 +45,39 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  # healthChecks:
-  #   - apiVersion: apps/v1
-  #     kind: Deployment
-  #     name: kyverno-admission-controller
-  #     namespace: kyverno
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: access-manager
+      namespace: projectsveltos
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: addon-controller
+      namespace: projectsveltos
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: classifier-manager
+      namespace: projectsveltos
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: conversion-webhook
+      namespace: projectsveltos
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: event-manager
+      namespace: projectsveltos
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: hc-manager
+      namespace: projectsveltos
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: sc-manager
+      namespace: projectsveltos
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: shard-controller
+      namespace: projectsveltos
   patches:
     - target:
         kind: HelmRelease

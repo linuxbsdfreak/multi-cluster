@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - projectsveltos/helm-repo.yaml
   - projectsveltos/helm-release.yaml
+  - projectsveltos/ui.yaml
