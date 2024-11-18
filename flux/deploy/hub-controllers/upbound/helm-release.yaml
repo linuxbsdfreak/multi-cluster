@@ -14,5 +14,9 @@ spec:
         name: upbound-stable
   interval: 5m
   timeout: 5m
+  install:
+    remediation:
+      retries: 3
   upgrade:
+    remediation:
       retries: 3
