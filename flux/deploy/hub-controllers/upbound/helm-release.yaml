@@ -8,12 +8,11 @@ spec:
   releaseName: upbound-system
   chart:
     spec:
-      chart: upbound-stable/universal-crossplane
+      chart: universal-crossplane
       sourceRef:
         kind: HelmRepository
-        name: upbound 
+        name: upbound-stable
   interval: 5m
   timeout: 5m
   upgrade:
-    remediation:
       retries: 3
