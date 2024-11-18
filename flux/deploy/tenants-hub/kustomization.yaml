@@ -4,3 +4,4 @@ resources:
   - flux.yaml
   - eso.yaml
   - projectsveltos.yaml
+  - upbound-system.yaml

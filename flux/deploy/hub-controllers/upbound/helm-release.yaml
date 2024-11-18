@@ -1,0 +1,19 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: upbound-system
+spec:
+  targetNamespace: upbound-system
+  storageNamespace: upbound-system
+  releaseName: upbound-system
+  chart:
+    spec:
+      chart: upbound-stable/universal-crossplane
+      sourceRef:
+        kind: HelmRepository
+        name: upbound 
+  interval: 5m
+  timeout: 5m
+  upgrade:
+    remediation:
+      retries: 3

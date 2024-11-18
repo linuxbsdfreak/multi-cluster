@@ -7,3 +7,7 @@ patches:
    target:
      kind: HelmRelease
      name: eso
+ - path: uxp-values.yaml
+   target:
+     kind: HelmRelease
+     name: uxp

@@ -4,4 +4,6 @@ resources:
   - projectsveltos/helm-repo.yaml
   - projectsveltos/helm-release.yaml
   - eso/helm-repo.yaml
-  - eso/helm-release.yaml  
+  - eso/helm-release.yaml
+  - upbound/helm-repo.yaml
+  - upbound/helm-release.yaml
