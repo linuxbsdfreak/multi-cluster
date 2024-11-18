@@ -11,3 +11,7 @@ patches:
    target:
      kind: HelmRelease
      name: uxp
+ - path: sealed-secrets-values.yaml
+   target:
+     kind: HelmRelease
+     name: sealed-secrets

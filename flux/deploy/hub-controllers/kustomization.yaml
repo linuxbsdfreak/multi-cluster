@@ -7,3 +7,5 @@ resources:
   - eso/helm-release.yaml
   - upbound/helm-repo.yaml
   - upbound/helm-release.yaml
+  - sealed-secrets/helm-repo.yaml
+  - sealed-secrets/helm-release.yaml

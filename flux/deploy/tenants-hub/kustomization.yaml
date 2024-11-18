@@ -5,3 +5,4 @@ resources:
   - eso.yaml
   - projectsveltos.yaml
   - upbound-system.yaml
+  - sealed-secrets.yaml
