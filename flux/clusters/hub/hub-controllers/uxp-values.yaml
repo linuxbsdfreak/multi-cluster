@@ -14,3 +14,8 @@ spec:
     - "-d"
     packageCache:
       sizeLimit: 500Mi
+    provider:
+      packages:
+      - xpkg.upbound.io/upbound/provider-vault:v1.0.0
+      - xpkg.upbound.io/upbound/provider-helm:v0.20.0
+      - xpkg.upbound.io/upbound/provider-kubernetes:v0.16.0
