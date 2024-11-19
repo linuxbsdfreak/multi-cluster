@@ -8,7 +8,7 @@ spec:
   releaseName: sealed-secrets
   chart:
     spec:
-      chart: external-secrets
+      chart: sealed-secrets
       sourceRef:
         kind: HelmRepository
         name: sealed-secrets
