@@ -9,3 +9,5 @@ resources:
   - upbound/helm-release.yaml
   - sealed-secrets/helm-repo.yaml
   - sealed-secrets/helm-release.yaml
+  - sealed-secrets-web/helm-repo.yaml
+  - sealed-secrets-web/helm-release.yaml  

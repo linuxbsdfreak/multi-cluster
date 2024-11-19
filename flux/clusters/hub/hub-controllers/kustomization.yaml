@@ -15,3 +15,7 @@ patches:
    target:
      kind: HelmRelease
      name: sealed-secrets
+ - path: sealed-secrets-web-values.yaml
+   target:
+     kind: HelmRelease
+     name: sealed-secrets-web

@@ -6,3 +6,4 @@ resources:
   - projectsveltos.yaml
   - upbound-system.yaml
   - sealed-secrets.yaml
+  - sealed-secrets-web.yaml
