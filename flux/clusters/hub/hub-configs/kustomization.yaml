@@ -3,6 +3,28 @@ kind: Kustomization
 resources:
   - ../../../deploy/hub-configs
 
+configMapGenerator:
+  - name: vault-config
+    literals:
+      - server=https://vault-staging.tools.sap
+      - path=eso-vault
+      - mountPath=eso-vault
+
+patches:
+  - target:
+      kind: ClusterSecretStore
+      name: vault-connection
+    patch: |-
+      - op: replace
+        path: /spec/provider/vault/server
+        value: $(VAULT_SERVER)
+      - op: replace
+        path: /spec/provider/vault/path
+        value: $(VAULT_PATH)
+      - op: replace
+        path: /spec/provider/vault/auth/kubernetes/mountPath
+        value: $(VAULT_MOUNT_PATH)
+
 vars:
   - name: VAULT_SERVER
     objref:
@@ -25,10 +47,3 @@ vars:
       apiVersion: v1
     fieldref:
       fieldpath: data.mountPath
-
-configMapGenerator:
-  - name: vault-config
-    literals:
-      - server=https://vault-staging.tools.sap
-      - path=eso-vault
-      - mountPath=eso-vault
