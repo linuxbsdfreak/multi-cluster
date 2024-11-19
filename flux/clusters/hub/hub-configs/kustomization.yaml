@@ -29,6 +29,6 @@ vars:
 configMapGenerator:
   - name: vault-config
     literals:
-      - server=https://vault.example.com
-      - path=hc-dev/static
-      - mountPath=hc-dev/hub/
+      - server=https://vault-staging.tools.sap
+      - path=eso-vault
+      - mountPath=eso-vault
