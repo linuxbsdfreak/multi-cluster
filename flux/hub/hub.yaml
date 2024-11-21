@@ -124,4 +124,8 @@ spec:
     namespace: flux-system
   kubeConfig:
     secretRef:
-      name: hub-cluster-kubeconfig      
+      name: hub-cluster-kubeconfig
+  postBuild:
+    substitute:
+      vault_server: "https://vault-staging.tools.sap"
+      vault_path: "eso-vault"     
