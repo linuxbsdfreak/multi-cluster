@@ -127,5 +127,5 @@ spec:
       name: hub-cluster-kubeconfig
   postBuild:
     substitute:
-      vault_server: "https://vault-staging.tools.sap"
-      vault_path: "eso-vault"     
+      vault_server: "https://vault.example.com"
+      vault_path: "eso-vault"  
