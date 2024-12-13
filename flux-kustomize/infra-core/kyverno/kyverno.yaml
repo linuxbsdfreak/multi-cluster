@@ -18,13 +18,13 @@ spec:
     createNamespace: true
   targetNamespace: kyverno
   storageNamespace: kyverno
-  releaseName: kyverno
+  releaseName: ${RELEASE_NAME:kyverno}
   interval: 5m
   timeout: 5m
   chart:
     spec:
       chart: kyverno
-      version: '>=3.3.x'
+      version: ${CHART_VERSION:>=3.3.x}
       sourceRef:
         kind: HelmRepository
         name: kyverno

@@ -16,12 +16,11 @@ metadata:
 spec:
   install:
     createNamespace: true
-    remediation:
-      retries: 3
   targetNamespace: kyverno-policies
   storageNamespace: kyverno-policies
   releaseName: kyverno-policies
-  interval: 1m
+  interval: 5m
+  timeout: 5m
   chart:
     spec:
       chart: kyverno-policies
@@ -29,5 +28,8 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: kyverno-policies
+  upgrade:
+    remediation:
+      retries: 3
   driftDetection:
     mode: enabled
