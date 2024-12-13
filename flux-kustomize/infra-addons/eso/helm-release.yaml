@@ -2,6 +2,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: eso
+  namespace: default
 spec:
   targetNamespace: eso
   storageNamespace: eso
