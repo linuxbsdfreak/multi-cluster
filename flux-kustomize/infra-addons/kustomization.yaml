@@ -1,7 +1,5 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - eso/helm-repo.yaml
-  - eso/helm-release.yaml
-  - policy-reporter/helm-repo.yaml
-  - policy-reporter/helm-release.yaml
+  - eso/eso.yaml
+  - policy-reporter/policy-reporter.yaml

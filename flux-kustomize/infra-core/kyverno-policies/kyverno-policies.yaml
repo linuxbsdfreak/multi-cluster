@@ -1,12 +1,25 @@
 ---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: kyverno-policies
+  namespace: default
+spec:
+  interval: 5m
+  url: https://kyverno.github.io/kyverno
+---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: kyverno-policies
   namespace: default
 spec:
-  targetNamespace: kyverno
-  storageNamespace: kyverno
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  targetNamespace: kyverno-policies
+  storageNamespace: kyverno-policies
   releaseName: kyverno-policies
   interval: 1m
   chart:
@@ -18,6 +31,3 @@ spec:
         name: kyverno-policies
   driftDetection:
     mode: enabled
-  install:
-    remediation:
-      retries: 3

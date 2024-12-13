@@ -1,20 +1,34 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: eso
+  namespace: default
+spec:
+  interval: 5m
+  url: https://charts.external-secrets.io
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: eso
   namespace: default
 spec:
+  install:
+    createNamespace: true
   targetNamespace: eso
   storageNamespace: eso
   releaseName: eso
+  interval: 5m
+  timeout: 5m
   chart:
     spec:
       chart: external-secrets
+      version: '>=0.11.x'
       sourceRef:
         kind: HelmRepository
         name: eso
-  interval: 5m
-  timeout: 5m
   upgrade:
     remediation:
       retries: 3
+  driftDetection:
+    mode: enabled

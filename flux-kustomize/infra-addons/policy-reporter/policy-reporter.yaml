@@ -1,20 +1,34 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: policy-reporter
+  namespace: default
+spec:
+  interval: 5m
+  url: https://kyverno.github.io/policy-reporter
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: policy-reporter
   namespace: default
 spec:
+  install:
+    createNamespace: true
   targetNamespace: policy-reporter
   storageNamespace: policy-reporter
   releaseName: policy-reporter
+  interval: 5m
+  timeout: 5m
   chart:
     spec:
       chart: policy-reporter
+      version: '>=3.3.x'
       sourceRef:
         kind: HelmRepository
-        name: policy-reporter
-  interval: 5m
-  timeout: 5m
+        name: eso
   upgrade:
     remediation:
       retries: 3
+  driftDetection:
+    mode: enabled
