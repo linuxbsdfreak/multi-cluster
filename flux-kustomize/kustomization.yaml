@@ -3,9 +3,9 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: infra-core
-  namespace: default
+  namespace: flux-system
 spec:
-  targetNamespace: default
+  targetNamespace: flux-system
   interval: 15m
   path: "./infra-core"
   wait: true
@@ -16,51 +16,57 @@ spec:
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2beta1
       kind: HelmRelease
-      name: test
+      name: ${KYVERNO_RELEASE_NAME}
       namespace: default
-    # - apiVersion: helm.toolkit.fluxcd.io/v2beta1
-    #   kind: HelmRelease
-    #   name: kyverno-policies
-    #   namespace: default
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: ${KYVERNO_CPOL_RELEASE_NAME}
+      namespace: default
   timeout: 5m
   kubeConfig:
     secretRef:
       key: kubeconfig
-      name: admin-kubeconfig-test
+      name: admin-kubeconfig-cluster
   postBuild:
     substitute:
-      CLUSTER_NAME: dummy
-      KYVERNO_RELEASE_NAME: kyverno-hr-${CLUSTER_NAME}
-      KYVERNO_CHART_VERSION: 3.4.0
-      # KYVERNO_POLICIES_RELEASE_NAME: kyverno-policies-hr-${CLUSTER_NAME}
-      # KYVERNO_POLICIES_CHART_VERSION: 3.4.0
+      KYVERNO_RELEASE_NAME: "kyverno-demo"
+      KYVERNO_CHART_VERSION: "3.5.0"
+      KYVERNO_CPOL_RELEASE_NAME: "kyverno-cpol-demo"
+      KYVERNO_CPOL_CHART_VERSION: "3.6.0"      
 ---
-# apiVersion: kustomize.toolkit.fluxcd.io/v1
-# kind: Kustomization
-# metadata:
-#   name: infra-addons
-#   namespace: default
-# spec:
-#   dependsOn:
-#     - name: infra-core
-#   interval: 15m
-#   path: "./deploy/infra-addons"
-#   wait: true
-#   prune: true
-#   sourceRef:
-#     kind: GitRepository
-#     name: infra-repo
-#   healthChecks:
-#     - apiVersion: helm.toolkit.fluxcd.io/v2beta1
-#       kind: HelmRelease
-#       name: eso
-#       namespace: default
-#     - apiVersion: helm.toolkit.fluxcd.io/v2beta1
-#       kind: HelmRelease
-#       name: policy-reporter
-#       namespace: default
-#   timeout: 5m
-#   kubeConfig:
-#     secretRef:
-#       key: kubeconfig
-#       name: admin-kubeconfig
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-addons
+  namespace: flux-system
+spec:
+  targetNamespace: flux-system
+  dependsOn:
+    - name: infra-core
+  interval: 15m
+  path: "./infra-addons"
+  wait: true
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: infra-repo
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: ${ESO_RELEASE_NAME}
+      namespace: default
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: ${POLICY_REPORTER_RELEASE_NAME}
+      namespace: default
+  timeout: 5m
+  kubeConfig:
+    secretRef:
+      key: kubeconfig
+      name: admin-kubeconfig-cluster
+  postBuild:
+    substitute:
+      ESO_RELEASE_NAME: "eso-demo"
+      ESO_CHART_VERSION: "0.11.1"
+      POLICY_REPORTER_RELEASE_NAME: "policy-reporter-demo"
+      POLICY_REPORTER_CHART_VERSION: "3.0.0-rc.13"

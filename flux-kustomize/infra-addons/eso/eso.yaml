@@ -10,20 +10,20 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: eso
+  name: ${ESO_RELEASE_NAME:eso}
   namespace: default
 spec:
   install:
     createNamespace: true
   targetNamespace: eso
   storageNamespace: eso
-  releaseName: eso
+  releaseName: ${ESO_RELEASE_NAME:eso}
   interval: 5m
   timeout: 5m
   chart:
     spec:
       chart: external-secrets
-      version: '>=0.11.x'
+      version:  ${ESO_CHART_VERSION:>=0.11.x}
       sourceRef:
         kind: HelmRepository
         name: eso

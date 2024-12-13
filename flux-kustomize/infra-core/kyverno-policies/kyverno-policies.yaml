@@ -11,20 +11,20 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: kyverno-policies
+  name: ${KYVERNO_CPOL_RELEASE_NAME:kyverno-policies}
   namespace: default
 spec:
   install:
     createNamespace: true
   targetNamespace: kyverno-policies
   storageNamespace: kyverno-policies
-  releaseName: kyverno-policies
+  releaseName:  ${KYVERNO_CPOL_RELEASE_NAME:kyverno-policies}
   interval: 5m
   timeout: 5m
   chart:
     spec:
       chart: kyverno-policies
-      version: '>=v3.3.0'
+      version: ${KYVERNO_CPOL_CHART_VERSION:>=3.3.x}
       sourceRef:
         kind: HelmRepository
         name: kyverno-policies
