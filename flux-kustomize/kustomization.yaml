@@ -14,9 +14,9 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: infra-core
-  namespace: flux-system
+  namespace: default
 spec:
-  targetNamespace: flux-system
+  targetNamespace: default
   interval: 2m
   path: "./flux-kustomize/infra-core"
   wait: true
@@ -25,11 +25,11 @@ spec:
     kind: GitRepository
     name: infra-repo
   healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+    - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
       name: ${KYVERNO_RELEASE_NAME}
       namespace: default
-    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+    - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
       name: ${KYVERNO_CPOL_RELEASE_NAME}
       namespace: default
