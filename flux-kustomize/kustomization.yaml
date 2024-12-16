@@ -6,7 +6,7 @@ metadata:
   namespace: default
 spec:
   interval: 5m
-  url: https://github.com/linuxbsdfreak
+  url: https://github.com/linuxbsdfreak/multi-cluster
   ref:
     branch: main
 ---
@@ -17,7 +17,7 @@ metadata:
   namespace: default
 spec:
   targetNamespace: default
-  interval: 15m
+  interval: 2m
   path: "./flux-kustomize/infra-core"
   wait: true
   prune: true
@@ -45,39 +45,39 @@ spec:
       KYVERNO_CPOL_RELEASE_NAME: "kyma-dev-eu12-poc-pls-wps-cpol"
       KYVERNO_CPOL_CHART_VERSION: "3.3.2" 
 ---
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: infra-addons
-  namespace: default
-spec:
-  targetNamespace: default
-  dependsOn:
-    - name: infra-core
-  interval: 15m
-  path: "./flux-kustomize/infra-addons"
-  wait: true
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: infra-repo
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
-      kind: HelmRelease
-      name: ${ESO_RELEASE_NAME}
-      namespace: default
-    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
-      kind: HelmRelease
-      name: ${POLICY_REPORTER_RELEASE_NAME}
-      namespace: default
-  timeout: 5m
-  kubeConfig:
-    secretRef:
-      key: kubeconfig
-      name: admin-kubeconfig-kyma-dev-eu12-poc-pls
-  postBuild:
-    substitute:
-      ESO_RELEASE_NAME: "kyma-dev-eu12-poc-pls-wps-eso"
-      ESO_CHART_VERSION: "0.11.1"
-      POLICY_REPORTER_RELEASE_NAME: "kyma-dev-eu12-poc-pls-wps-reporter"
-      POLICY_REPORTER_CHART_VERSION: "3.0.0-rc.13"
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: infra-addons
+#   namespace: default
+# spec:
+#   targetNamespace: default
+#   dependsOn:
+#     - name: infra-core
+#   interval: 15m
+#   path: "./flux-kustomize/infra-addons"
+#   wait: true
+#   prune: true
+#   sourceRef:
+#     kind: GitRepository
+#     name: infra-repo
+#   healthChecks:
+#     - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+#       kind: HelmRelease
+#       name: ${ESO_RELEASE_NAME}
+#       namespace: default
+#     - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+#       kind: HelmRelease
+#       name: ${POLICY_REPORTER_RELEASE_NAME}
+#       namespace: default
+#   timeout: 5m
+#   kubeConfig:
+#     secretRef:
+#       key: kubeconfig
+#       name: admin-kubeconfig-kyma-dev-eu12-poc-pls
+#   postBuild:
+#     substitute:
+#       ESO_RELEASE_NAME: "kyma-dev-eu12-poc-pls-wps-eso"
+#       ESO_CHART_VERSION: "0.11.1"
+#       POLICY_REPORTER_RELEASE_NAME: "kyma-dev-eu12-poc-pls-wps-reporter"
+#       POLICY_REPORTER_CHART_VERSION: "3.0.0-rc.13"
