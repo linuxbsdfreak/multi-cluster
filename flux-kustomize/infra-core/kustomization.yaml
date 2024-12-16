@@ -12,6 +12,6 @@ patches:
 configMapGenerator:
   - name: kyverno-helm-chart-value-overrides
     files: 
-      - values.yaml=kyverno/kyverno-values.yaml
+      - values.yaml=kyverno-values.yaml
 configurations:
   - kustomizeconfig.yaml
