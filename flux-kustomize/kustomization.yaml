@@ -51,7 +51,7 @@ spec:
   targetNamespace: default
   dependsOn:
     - name: infra-core
-  interval: 15m
+  interval: 2m
   path: "./flux-kustomize/infra-addons"
   wait: true
   prune: true
@@ -71,7 +71,7 @@ spec:
   postBuild:
     substitute:
       ESO_RELEASE_NAME: "kyma-dev-eu12-poc-pls-wps-eso"
-      ESO_CHART_VERSION: "0.11.1"
+      ESO_CHART_VERSION: "0.11.0"
       POLICY_REPORTER_RELEASE_NAME: "kyma-dev-eu12-poc-pls-wps-reporter"
       POLICY_REPORTER_CHART_VERSION: "3.0.0-rc.13"
       KUBECONFIG_PATH: "admin-kubeconfig-kyma-dev-eu12-poc-pls"
