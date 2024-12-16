@@ -1,0 +1,114 @@
+replicaCount: 2
+leaderElection:
+  enabled: false
+  releaseOnCancel: true
+  leaseDuration: 15
+  renewDeadline: 10
+  retryPeriod: 2
+
+podSecurityContext:
+  fsGroup: 2000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+      - CAP_NET_RAW
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 65534
+  runAsGroup: 65534
+  seccompProfile:
+    type: RuntimeDefault
+
+# -- Resource constraints
+resources:
+  limits:
+    memory: 100Mi
+    cpu: 10m
+  requests:
+    memory: 75Mi
+    cpu: 5m
+
+# -- Amount of queue workers for PolicyReport resource processing
+worker: 20
+
+ui:
+  enabled: true
+  sources:
+    - name: kyverno
+      exceptions: true
+      viewType: status
+      excludes:
+        results:
+          - warn
+  # customBoards:
+  #   - name: System
+  #     namespaces:
+  #       list:
+  #         - kube-system
+  #         - kyverno
+  #         - policy-reporter
+
+  displayMode: "colorblinddark"
+  banner: "Kyma Workload Cluster"
+  replicaCount: 2
+
+  podSecurityContext:
+    fsGroup: 2000
+
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+        - CAP_NET_RAW
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 65534
+    runAsGroup: 65534
+    seccompProfile:
+      type: RuntimeDefault
+
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+plugin:
+  kyverno:
+    enabled: true
+    replicaCount: 2
+    leaderElection:
+      releaseOnCancel: true
+      leaseDuration: 15
+      renewDeadline: 10
+      retryPeriod: 2
+
+  podSecurityContext:
+    fsGroup: 2000
+
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+        - CAP_NET_RAW
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 65534
+    runAsGroup: 65534
+    seccompProfile:
+      type: RuntimeDefault
+
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi

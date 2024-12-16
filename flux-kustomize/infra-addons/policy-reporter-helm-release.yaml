@@ -1,11 +1,3 @@
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: policy-reporter
-  namespace: default
-spec:
-  interval: 5m
-  url: https://kyverno.github.io/policy-reporter
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -32,3 +24,11 @@ spec:
       retries: 3
   driftDetection:
     mode: enabled
+  valuesFrom:
+  - kind: ConfigMap
+    name: reporter-helm-chart-value-overrides
+    valuesKey: values.yaml
+  kubeConfig:
+    secretRef:
+      key: kubeconfig
+      name: ${KUBECONFIG_PATH:admin-kubeconfig-kyma-dev-eu12-poc-pls}    

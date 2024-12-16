@@ -1,5 +1,28 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - eso/eso.yaml
-  - policy-reporter/policy-reporter.yaml
+  - eso-helm-repo.yaml
+  - eso-helm-release.yaml
+  - policy-reporter-helm-repo.yaml
+  - policy-reporter-helm-release.yaml  
+
+patches:
+  - path: eso-helm-release.yaml
+    target:
+      kind: HelmRelease
+      name: ${ESO_RELEASE_NAME:eso}
+  - path: eso-helm-release.yaml
+    target:
+      kind: HelmRelease
+      name: ${ESO_RELEASE_NAME:eso}      
+configMapGenerator:
+  - name: eso-helm-chart-value-overrides
+    files: 
+      - values.yaml=eso-helm-chart-value-overrides.yaml
+  - name: reporter-helm-chart-value-overrides
+    files: 
+      - values.yaml=reporter-helm-chart-value-overrides.yaml
+
+configurations:
+  - kustomizeconfig.yaml
+
