@@ -24,3 +24,7 @@ spec:
       retries: 3
   driftDetection:
     mode: enabled
+  kubeConfig:
+    secretRef:
+      key: kubeconfig
+      name: ${KUBECONFIG_PATH:admin-kubeconfig-kyma-dev-eu12-poc-pls}    

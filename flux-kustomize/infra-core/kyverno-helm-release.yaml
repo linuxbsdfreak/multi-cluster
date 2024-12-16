@@ -28,3 +28,7 @@ spec:
   - kind: ConfigMap
     name: kyverno-helm-chart-value-overrides
     valuesKey: values.yaml
+  kubeConfig:
+    secretRef:
+      key: kubeconfig
+      name: ${KUBECONFIG_PATH:admin-kubeconfig-kyma-dev-eu12-poc-pls}

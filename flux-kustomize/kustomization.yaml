@@ -34,16 +34,13 @@ spec:
       name: ${KYVERNO_CPOL_RELEASE_NAME}
       namespace: default
   timeout: 5m
-  kubeConfig:
-    secretRef:
-      key: kubeconfig
-      name: admin-kubeconfig-kyma-dev-eu12-poc-pls
   postBuild:
     substitute:
       KYVERNO_RELEASE_NAME: "kyma-dev-eu12-poc-pls-wps-kyverno"
       KYVERNO_CHART_VERSION: "3.3.4"
       KYVERNO_CPOL_RELEASE_NAME: "kyma-dev-eu12-poc-pls-wps-cpol"
       KYVERNO_CPOL_CHART_VERSION: "3.3.2" 
+      KUBECONFIG_PATH: "admin-kubeconfig-kyma-dev-eu12-poc-pls"
 ---
 # apiVersion: kustomize.toolkit.fluxcd.io/v1
 # kind: Kustomization
