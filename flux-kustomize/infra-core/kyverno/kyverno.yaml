@@ -33,3 +33,7 @@ spec:
       retries: 3
   driftDetection:
     mode: enabled
+  valuesFrom:
+  - kind: ConfigMap
+    name: kyverno-helm-chart-value-overrides
+    valuesKey: values.yaml

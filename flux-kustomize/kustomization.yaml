@@ -1,13 +1,24 @@
 ---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: infra-repo
+  namespace: default
+spec:
+  interval: 5m
+  url: https://github.com/linuxbsdfreak
+  ref:
+    branch: main
+---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: infra-core
-  namespace: flux-system
+  namespace: default
 spec:
-  targetNamespace: flux-system
+  targetNamespace: default
   interval: 15m
-  path: "./infra-core"
+  path: "./flux-kustomize/infra-core"
   wait: true
   prune: true
   sourceRef:
@@ -26,25 +37,25 @@ spec:
   kubeConfig:
     secretRef:
       key: kubeconfig
-      name: admin-kubeconfig-cluster
+      name: admin-kubeconfig-kyma-dev-eu12-poc-pls
   postBuild:
     substitute:
-      KYVERNO_RELEASE_NAME: "kyverno-demo"
-      KYVERNO_CHART_VERSION: "3.5.0"
-      KYVERNO_CPOL_RELEASE_NAME: "kyverno-cpol-demo"
-      KYVERNO_CPOL_CHART_VERSION: "3.6.0"      
+      KYVERNO_RELEASE_NAME: "kyma-dev-eu12-poc-pls-wps-kyverno"
+      KYVERNO_CHART_VERSION: "3.3.4"
+      KYVERNO_CPOL_RELEASE_NAME: "kyma-dev-eu12-poc-pls-wps-cpol"
+      KYVERNO_CPOL_CHART_VERSION: "3.3.2" 
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: infra-addons
-  namespace: flux-system
+  namespace: default
 spec:
-  targetNamespace: flux-system
+  targetNamespace: default
   dependsOn:
     - name: infra-core
   interval: 15m
-  path: "./infra-addons"
+  path: "./flux-kustomize/infra-addons"
   wait: true
   prune: true
   sourceRef:
@@ -63,10 +74,10 @@ spec:
   kubeConfig:
     secretRef:
       key: kubeconfig
-      name: admin-kubeconfig-cluster
+      name: admin-kubeconfig-kyma-dev-eu12-poc-pls
   postBuild:
     substitute:
-      ESO_RELEASE_NAME: "eso-demo"
+      ESO_RELEASE_NAME: "kyma-dev-eu12-poc-pls-wps-eso"
       ESO_CHART_VERSION: "0.11.1"
-      POLICY_REPORTER_RELEASE_NAME: "policy-reporter-demo"
+      POLICY_REPORTER_RELEASE_NAME: "kyma-dev-eu12-poc-pls-wps-reporter"
       POLICY_REPORTER_CHART_VERSION: "3.0.0-rc.13"

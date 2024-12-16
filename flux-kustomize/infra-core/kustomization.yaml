@@ -3,3 +3,15 @@ kind: Kustomization
 resources:
   - kyverno/kyverno.yaml
   - kyverno-policies/kyverno-policies.yaml
+
+patches:
+  - path: kyverno-values.yaml
+    target:
+      kind: HelmRelease
+      name: ${KYVERNO_RELEASE_NAME:kyverno}
+configMapGenerator:
+  - name: kyverno-helm-chart-value-overrides
+    files: 
+      - values.yaml=kyverno-values.yaml
+configurations:
+  - kustomizeconfig.yaml
