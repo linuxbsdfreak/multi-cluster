@@ -6,6 +6,8 @@ metadata:
   namespace: default
 spec:
   install:
+    remediation:
+      retries: 3
     createNamespace: true
   targetNamespace: policy-reporter
   storageNamespace: policy-reporter
@@ -20,8 +22,10 @@ spec:
         kind: HelmRepository
         name: policy-reporter
   upgrade:
+    timeout: 60s
     remediation:
       retries: 3
+      strategy: rollback
   driftDetection:
     mode: enabled
   valuesFrom:
