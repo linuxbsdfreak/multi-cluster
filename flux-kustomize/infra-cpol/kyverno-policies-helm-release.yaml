@@ -2,20 +2,20 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: ${KYVERNO_CPOL_RELEASE_NAME:kyverno-policies}
+  name: ${KYVERNO_PSP_CPOL_RELEASE_NAME:kyverno-policies}
   namespace: default
 spec:
   install:
     createNamespace: true
   targetNamespace: kyverno-policies
   storageNamespace: kyverno-policies
-  releaseName:  ${KYVERNO_CPOL_RELEASE_NAME:kyverno-policies}
+  releaseName:  ${KYVERNO_PSP_CPOL_RELEASE_NAME:kyverno-policies}
   interval: 5m
   timeout: 5m
   chart:
     spec:
       chart: kyverno-policies
-      version: ${KYVERNO_CPOL_CHART_VERSION:>=3.3.x}
+      version: ${KYVERNO_PSP_CPOL_CHART_VERSION:>=3.3.x}
       sourceRef:
         kind: HelmRepository
         name: kyverno-policies
@@ -24,7 +24,11 @@ spec:
       retries: 3
   driftDetection:
     mode: enabled
+  valuesFrom:
+  - kind: ConfigMap
+    name: psp-cpol-helm-chart-value-overrides
+    valuesKey: values.yaml
   kubeConfig:
     secretRef:
       key: kubeconfig
-      name: ${KUBECONFIG_PATH:admin-kubeconfig-kyma-dev-eu12-poc-pls}    
+      name: ${KUBECONFIG_PATH:admin-kubeconfig-kyma-dev-eu12-poc-pls}

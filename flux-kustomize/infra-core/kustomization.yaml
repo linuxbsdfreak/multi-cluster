@@ -3,8 +3,6 @@ kind: Kustomization
 resources:
   - kyverno-helm-repo.yaml
   - kyverno-helm-release.yaml
-  - kyverno-policies-helm-repo.yaml
-  - kyverno-policies-helm-release.yaml
 
 patches:
   - path: kyverno-helm-release.yaml
