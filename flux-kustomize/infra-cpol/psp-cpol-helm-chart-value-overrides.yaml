@@ -39,6 +39,7 @@ customPolicies:
             apiVersion: v1
             kind: ServiceAccount
             name: "{{`{{request.object.metadata.name}}`}}-kyma-sa"
+            namespace: "{{`{{request.object.metadata.name}}`}}"
             synchronize: true
             data:
               metadata:
