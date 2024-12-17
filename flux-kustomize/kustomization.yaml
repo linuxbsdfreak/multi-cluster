@@ -43,6 +43,8 @@ metadata:
   namespace: default
 spec:
   targetNamespace: default
+  dependsOn:
+    - name: infra-core
   interval: 5m
   timeout: 10m
   path: "./flux-kustomize/infra-cpol"

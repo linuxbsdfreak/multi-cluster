@@ -21,11 +21,514 @@ includeRestrictedPolicies: []
 # - require-run-as-non-root-user
 
 # -- Additional custom policies to include.
-customPolicies: []
-# - apiVersion: kyverno.io/v1
-#   kind: ClusterPolicy
-#   metadata: # metadata
-#   spec: # spec
+customPolicies:
+  - apiVersion: kyverno.io/v1
+    kind: ClusterPolicy
+    metadata:
+      name: generate-namespaced-resources
+    spec:
+      rules:
+        - name: generate-service-account
+          match:
+            any:
+            - resources:
+                kinds:
+                  - Namespace
+          generate:
+            generateExisting: true
+            apiVersion: v1
+            kind: ServiceAccount
+            name: "{{`{{request.object.metadata.name}}`}}-kyma-sa"
+            synchronize: true
+            data:
+              metadata:
+                labels:
+                  created-by: kyverno
+        - name: generate-secret
+          match:
+            any:
+            - resources:
+                kinds:
+                  - Namespace
+          generate:
+            generateExisting: true
+            apiVersion: v1
+            kind: Secret
+            name: "{{`{{request.object.metadata.name}}`}}-kyma-sa-secret"
+            namespace: "{{`{{request.object.metadata.name}}`}}"
+            synchronize: true
+            data:
+              metadata:
+                labels:
+                  created-by: kyverno
+                annotations:
+                  kubernetes.io/service-account.name: "{{`{{request.object.metadata.name}}`}}-kyma-sa"
+              type: kubernetes.io/service-account-token
+        - name: generate-role
+          match:
+            any:
+            - resources:
+                kinds:
+                  - Namespace
+          generate:
+            generateExisting: true
+            apiVersion: rbac.authorization.k8s.io/v1
+            kind: Role
+            name: "{{`{{request.object.metadata.name}}`}}-kyma-role"
+            namespace: "{{`{{request.object.metadata.name}}`}}"
+            synchronize: true
+            data:
+              metadata:
+                labels:
+                  created-by: kyverno
+              rules:
+              - apiGroups:
+                - ""
+                - extensions
+                - batch
+                - apps
+                - gateway.kyma-project.io
+                - servicecatalog.k8s.io
+                resources:
+                - deployments
+                - replicasets
+                - pods
+                - jobs
+                - configmaps
+                - apirules
+                - serviceinstances
+                - servicebindings
+                - services
+                - secrets
+                verbs:
+                - create
+                - update
+                - patch
+                - delete
+                - get
+                - list
+        - name: generate-rolebinding
+          match:
+            any:
+            - resources:
+                kinds:
+                  - Namespace
+          generate:
+            generateExisting: true
+            kind: RoleBinding
+            apiVersion: rbac.authorization.k8s.io/v1
+            name: "{{`{{request.object.metadata.name}}`}}-kyma-role-binding"
+            namespace: "{{`{{request.object.metadata.name}}`}}"
+            data:
+              metadata:
+                labels:
+                  created-by: kyverno
+              subjects:
+                - kind: ServiceAccount
+                  name: "{{`{{request.object.metadata.name}}`}}-kyma-sa"
+                  namespace: "{{`{{request.object.metadata.name}}`}}"
+              roleRef:
+                kind: Role
+                name: "{{`{{request.object.metadata.name}}`}}-kyma-role"
+                apiGroup: rbac.authorization.k8s.io
+        - name: generate-configmap
+          match:
+            any:
+            - resources:
+                kinds:
+                  - Namespace
+          generate:
+            generateExisting: true
+            kind: ConfigMap
+            apiVersion: v1
+            name: kubeconfig-script
+            namespace: "{{`{{request.object.metadata.name}}`}}"
+            synchronize: true
+            data:
+              metadata:
+                labels:
+                  created-by: kyverno
+              data:
+                script.sh: |
+                  #!/bin/bash
+                  set -e
+
+                  # Variables
+                  NAMESPACE={{`{{request.object.metadata.name}}`}}
+                  SECRET_NAME={{`{{request.object.metadata.name}}`}}-kyma-sa-secret
+                  KUBECONFIG_SECRET_NAME={{`{{request.object.metadata.name}}`}}-kyma-sa-kubeconfig
+
+                  # Get the API server URL
+                  API_SERVER_URL="https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}"
+
+                  # Get the CA certificate and token from the service account secret
+                  CA=$(kubectl get secret/${SECRET_NAME} -n $NAMESPACE -o jsonpath='{.data.ca\.crt}')
+                  TOKEN=$(kubectl get secret/${SECRET_NAME} -n $NAMESPACE -o jsonpath='{.data.token}' | base64 --decode)
+
+                  echo "Namespace: $NAMESPACE"
+                  echo "SA Secret name: $SECRET_NAME"
+                  echo "Kubeconfig secret: $KUBECONFIG_SECRET_NAME"
+                  echo "API Server URL: $API_SERVER_URL"
+                  # Generate the kubeconfig content
+                  KUBECONFIG_CONTENT=$(cat <<EOF
+                  apiVersion: v1
+                  kind: Config
+                  clusters:
+                    - name: default-cluster
+                      cluster:
+                        certificate-authority-data: ${CA}
+                        server: ${API_SERVER_URL}
+                  users:
+                    - name: default-user
+                      user:
+                        token: ${TOKEN}
+                  contexts:
+                    - name: default-context
+                      context:
+                        cluster: default-cluster
+                        namespace: $NAMESPACE
+                        user: default-user
+                  current-context: default-context
+                  EOF
+                  )
+
+                  # Create a Kubernetes secret with the kubeconfig
+                  kubectl create secret generic ${KUBECONFIG_SECRET_NAME} -n ${NAMESPACE} \
+                    --from-literal=kubeconfig="${KUBECONFIG_CONTENT}" \
+                    --dry-run=client -o yaml | kubectl apply -f -
+
+                  echo "Kubeconfig secret '${KUBECONFIG_SECRET_NAME}' created in namespace '${NAMESPACE}'."
+        - name: generate-job
+          match:
+            any:
+            - resources:
+                kinds:
+                  - Namespace
+          generate:
+            generateExisting: true
+            apiVersion: batch/v1
+            kind: Job
+            name: "{{`{{request.object.metadata.name}}`}}-kyma-create-kubeconfig"
+            namespace: "{{`{{request.object.metadata.name}}`}}"
+            synchronize: true
+            data:
+              metadata:
+                labels:
+                  created-by: kyverno
+              spec:
+                template:
+                  spec:
+                    serviceAccountName: "{{`{{request.object.metadata.name}}`}}-kyma-sa"
+                    containers:
+                      - name: kubeconfig-generator
+                        image: bitnami/kubectl:1.31.4
+                        command: ["/bin/bash", "/scripts/script.sh"]
+                        volumeMounts:
+                          - name: script-volume
+                            mountPath: /scripts
+                        resources:
+                          requests:
+                            memory: "32Mi"
+                            cpu: "10m"
+                          limits:
+                            memory: "64Mi"
+                            cpu: "1"
+                    restartPolicy: Never
+                    volumes:
+                      - name: script-volume
+                        configMap:
+                          name: kubeconfig-script
+                          defaultMode: 0755
+  - apiVersion: kyverno.io/v1
+    kind: ClusterPolicy
+    metadata:
+      name: generate-eso-vault-jwt-resources
+    spec:
+      rules:
+        - name: generate-eso-vault-sa
+          match:
+            any:
+            - resources:
+                kinds:
+                  - Namespace
+                selector:
+                  matchExpressions:
+                  - key: kubernetes.io/metadata.name
+                    operator: In
+                    values:
+                    - eso
+          generate:
+            generateExisting: true
+            apiVersion: v1
+            kind: ServiceAccount
+            name: "{{`{{request.object.metadata.name}}`}}-vault-sa"
+            namespace: "{{`{{request.object.metadata.name}}`}}"
+            synchronize: true
+            data:
+              metadata:
+                labels:
+                  created-by: kyverno
+        - name: generate-eso-vault-cluster-role
+          match:
+            any:
+            - resources:
+                kinds:
+                  - Namespace
+                selector:
+                  matchExpressions:
+                  - key: kubernetes.io/metadata.name
+                    operator: In
+                    values:
+                    - eso
+          generate:
+            generateExisting: true
+            apiVersion: rbac.authorization.k8s.io/v1
+            kind: Role
+            name: "{{`{{request.object.metadata.name}}`}}-vault-clusterrole"
+            namespace: "{{`{{request.object.metadata.name}}`}}"
+            synchronize: true
+            data:
+              metadata:
+                labels:
+                  created-by: kyverno
+              rules:
+              - apiGroups:
+                - ""
+                resources:
+                - secrets
+                verbs:
+                - create
+                - update
+                - patch
+                - delete
+                - get
+                - list
+        - name: generate-eso-vault-cluster-role-binding
+          match:
+            any:
+            - resources:
+                kinds:
+                  - Namespace
+                selector:
+                  matchExpressions:
+                  - key: kubernetes.io/metadata.name
+                    operator: In
+                    values:
+                    - eso
+          generate:
+            generateExisting: true
+            kind: RoleBinding
+            apiVersion: rbac.authorization.k8s.io/v1
+            name: "{{`{{request.object.metadata.name}}`}}-vault-role-binding"
+            namespace: "{{`{{request.object.metadata.name}}`}}"
+            synchronize: true
+            data:
+              metadata:
+                labels:
+                  created-by: kyverno
+              subjects:
+                - kind: ServiceAccount
+                  name: "{{`{{request.object.metadata.name}}`}}-vault-sa"
+                  namespace: "{{`{{request.object.metadata.name}}`}}"
+              roleRef:
+                kind: ClusterRole
+                name: "{{`{{request.object.metadata.name}}`}}-vault-clusterrole"
+                apiGroup: rbac.authorization.k8s.io
+        - name: generate-refresh-jwt-token-job
+          match:
+            any:
+            - resources:
+                kinds:
+                  - Namespace
+                selector:
+                  matchExpressions:
+                  - key: kubernetes.io/metadata.name
+                    operator: In
+                    values:
+                    - eso
+          generate:
+            generateExisting: true
+            apiVersion: batch/v1
+            kind: CronJob
+            name: "{{`{{request.object.metadata.name}}`}}-vault-refresh-jwt-token"
+            namespace: "{{`{{request.object.metadata.name}}`}}"
+            synchronize: true
+            data:
+              metadata:
+                labels:
+                  created-by: kyverno
+              spec:
+                schedule: "*/55 * * * *"                   # "*/55 * * * *" every 55 minutes
+                jobTemplate:
+                  spec:
+                    template:
+                      spec:
+                        serviceAccountName: "{{`{{request.object.metadata.name}}`}}-vault-sa"
+                        containers:
+                          - name: refresh-jwt
+                            image: linuxbsdfreak/utils:v1
+                            resources:
+                              requests:
+                                memory: "32Mi"
+                                cpu: "10m"
+                              limits:
+                                memory: "64Mi"
+                                cpu: "1"
+                            env:
+                              - name: CLIENT_ID
+                                valueFrom:
+                                  secretKeyRef:
+                                    name: idp-credentials
+                                    key: client_id
+                              - name: CLIENT_SECRET
+                                valueFrom:
+                                  secretKeyRef:
+                                    name: idp-credentials
+                                    key: client_secret
+                              - name: IDP_URL
+                                valueFrom:
+                                  secretKeyRef:
+                                    name: idp-credentials
+                                    key: idp_url
+                            args:
+                              - /bin/sh
+                              - -c
+                              - |
+                                TOKEN=$(curl --location --request POST "${IDP_URL}/oauth2/token" \
+                                --header "Content-Type: application/x-www-form-urlencoded" \
+                                --data-urlencode "grant_type=client_credentials" \
+                                --data-urlencode "client_id=${CLIENT_ID}" \
+                                --data-urlencode "client_secret=${CLIENT_SECRET}" | jq -r .access_token)
+                                
+                                echo "$TOKEN"
+
+                                kubectl create secret generic -n external-secrets jwt-token \
+                                --from-literal=token="$TOKEN" \
+                                --dry-run=client -o yaml | kubectl apply -f -
+                        restartPolicy: OnFailure
+  - apiVersion: kyverno.io/v1
+    kind: ClusterPolicy
+    metadata:
+      name: require-requests-limits
+    spec:
+      validationFailureAction: Audit
+      background: true
+      rules:
+      - name: validate-resources
+        match:
+          any:
+          - resources:
+              kinds:
+              - Pod
+        validate:
+          message: "CPU and memory resource requests and limits are required."
+          pattern:
+            spec:
+              containers:
+              - resources:
+                  requests:
+                    memory: "?*"
+                    cpu: "?*"
+                  limits:
+                    memory: "?*"
+              initContainers:
+              - resources:
+                  requests:
+                    memory: "?*"
+                    cpu: "?*"
+                  limits:
+                    memory: "?*"
+              ephemeralContainers:
+              - resources:
+                  requests:
+                    memory: "?*"
+                    cpu: "?*"
+                  limits:
+                    memory: "?*"
+  - apiVersion: kyverno.io/v1
+    kind: ClusterPolicy
+    metadata:
+      name: disallow-latest-tag
+      annotations:
+        policies.kyverno.io/title: Disallow Latest Tag
+        policies.kyverno.io/category: Best Practices
+        policies.kyverno.io/minversion: 1.6.0
+        policies.kyverno.io/severity: medium
+        policies.kyverno.io/subject: Pod 
+    spec:
+      validationFailureAction: Audit
+      background: true
+      rules:
+      - name: require-image-tag
+        match:
+          any:
+          - resources:
+              kinds:
+              - Pod
+        validate:
+          message: "An image tag is required."
+          pattern:
+            spec:
+              containers:
+              - image: "*:*"
+      - name: validate-image-tag
+        match:
+          any:
+          - resources:
+              kinds:
+              - Pod
+        validate:
+          message: "Using a mutable image tag e.g. 'latest' is not allowed."
+          pattern:
+            spec:
+              containers:
+              - image: "!*:latest"
+  - apiVersion: kyverno.io/v1
+    kind: ClusterPolicy
+    metadata:
+      name: sync-registry-credentials
+    spec:
+      rules:
+      - name: sync-image-pull-secret
+        match:
+          any:
+          - resources:
+              kinds:
+              - Namespace
+        generate:
+          apiVersion: v1
+          kind: Secret
+          name: registry-credentials
+          namespace: "{{`{{request.object.metadata.name}}`}}"
+          synchronize: true
+          clone:
+            namespace: default
+            name: registry-credentials
+  # - apiVersion: kyverno.io/v1
+  #   kind: ClusterPolicy
+  #   metadata:
+  #     name: add-imagepullsecrets-for-containers-and-initcontainers
+  #   spec:
+  #     rules:
+  #     - name: add-imagepullsecret
+  #       match:
+  #         any:
+  #         - resources:
+  #             kinds:
+  #             - Pod
+  #       preconditions:
+  #         any:
+  #         - key: "corp.reg.com"
+  #           operator: AnyIn
+  #           value: "{{ images.initContainers.*.registry || `[]` }}"
+  #         - key: "corp.reg.com"     
+  #           operator: AnyIn
+  #           value: "{{ images.containers.*.registry }}"
+  #       mutate:
+  #         patchStrategicMerge:
+  #           spec:
+  #             imagePullSecrets:
+  #             - name: registry-credentials
 
 # -- API server behavior if the webhook fails to respond ('Ignore', 'Fail')
 # For more info: https://kyverno.io/docs/writing-policies/policy-settings/
