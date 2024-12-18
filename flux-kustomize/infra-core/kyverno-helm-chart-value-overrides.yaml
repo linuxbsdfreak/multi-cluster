@@ -63,7 +63,7 @@ webhooksCleanup:
     pullPolicy: IfNotPresent
 
 admissionController:
-  replicas: 3
+  replicas: 1
   podAntiAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
     - labelSelector:
@@ -140,7 +140,7 @@ admissionController:
         type: RuntimeDefault
 
 backgroundController:
-  replicas: 2
+  replicas: 1
   podAntiAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
     - labelSelector:
@@ -266,7 +266,7 @@ securityContext:
     type: RuntimeDefault
 
 cleanupController:
-  replicas: 2
+  replicas: 1
   podAntiAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
     - labelSelector:
@@ -312,7 +312,7 @@ cleanupController:
       type: RuntimeDefault
 
 reportsController:
-  replicas: 2
+  replicas: 1
   podAntiAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
     - labelSelector:
