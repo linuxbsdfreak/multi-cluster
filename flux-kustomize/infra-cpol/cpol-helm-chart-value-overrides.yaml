@@ -439,13 +439,6 @@ customPolicies:
                     cpu: "?*"
                   limits:
                     memory: "?*"
-              ephemeralContainers:
-              - resources:
-                  requests:
-                    memory: "?*"
-                    cpu: "?*"
-                  limits:
-                    memory: "?*"
   - apiVersion: kyverno.io/v1
     kind: ClusterPolicy
     metadata:
