@@ -56,12 +56,12 @@ spec:
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
-      name: ${KYVERNO_PSP_CPOL_RELEASE_NAME}
+      name: ${KYVERNO_CPOL_RELEASE_NAME}
       namespace: default
   postBuild:
     substitute:
-      KYVERNO_PSP_CPOL_RELEASE_NAME: "kyma-dev-eu12-poc-pls-wps-cpol"
-      KYVERNO_PSP_CPOL_CHART_VERSION: "3.3.2"
+      KYVERNO_CPOL_RELEASE_NAME: "kyma-dev-eu12-poc-pls-wps-cpol"
+      KYVERNO_CPOL_CHART_VERSION: "3.3.2"
       KUBECONFIG_PATH: "admin-kubeconfig-kyma-dev-eu12-poc-pls"
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1

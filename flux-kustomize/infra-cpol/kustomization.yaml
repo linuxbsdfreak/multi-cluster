@@ -8,10 +8,10 @@ patches:
   - path: kyverno-policies-helm-release.yaml
     target:
       kind: HelmRelease
-      name: ${KYVERNO_PSP_CPOL_RELEASE_NAME:kyverno-policies}
+      name: ${KYVERNO_CPOL_RELEASE_NAME:kyverno-policies}
 configMapGenerator:
-  - name: psp-cpol-helm-chart-value-overrides
+  - name: cpol-helm-chart-value-overrides
     files: 
-      - values.yaml=psp-cpol-helm-chart-value-overrides.yaml
+      - values.yaml=cpol-helm-chart-value-overrides.yaml
 configurations:
   - kustomizeconfig.yaml
