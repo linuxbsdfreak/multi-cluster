@@ -15,6 +15,12 @@ processPushSecret: false
 # a time.
 concurrent: 20
 
+podAnnotations:
+  metrics.dynatrace.com/scrape: 'true'
+  metrics.dynatrace.com/path: '/metrics'
+  metrics.dynatrace.com/port: '8080'
+  metrics.dynatrace.com/secure: 'false'
+
 podSecurityContext:
   enabled: true
   fsGroup: 2000
@@ -49,7 +55,7 @@ affinity:
         - key: app.kubernetes.io/name
           operator: In
           values:
-            - external-secrets
+            - eso
       topologyKey: "kubernetes.io/hostname"
 
 podDisruptionBudget:
@@ -59,6 +65,12 @@ podDisruptionBudget:
 webhook:
   replicaCount: 1
 
+  podAnnotations:
+    metrics.dynatrace.com/scrape: 'true'
+    metrics.dynatrace.com/path: '/metrics'
+    metrics.dynatrace.com/port: '8080'
+    metrics.dynatrace.com/secure: 'false'
+
   affinity:
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
@@ -67,7 +79,7 @@ webhook:
           - key: app.kubernetes.io/name
             operator: In
             values:
-            - external-secrets-webhook
+            - eso-webhook
         topologyKey: "kubernetes.io/hostname"
 
   podDisruptionBudget:
@@ -102,6 +114,13 @@ webhook:
 
 certController:
   replicaCount: 1
+
+  podAnnotations:
+    metrics.dynatrace.com/scrape: 'true'
+    metrics.dynatrace.com/path: '/metrics'
+    metrics.dynatrace.com/port: '8080'
+    metrics.dynatrace.com/secure: 'false'
+
   affinity:
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
@@ -110,7 +129,7 @@ certController:
           - key: app.kubernetes.io/name
             operator: In
             values:
-              - "external-secrets-cert-controller"
+              - "eso-cert-controller"
         topologyKey: "kubernetes.io/hostname"  
 
   podDisruptionBudget:
