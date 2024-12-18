@@ -1,0 +1,22 @@
+apiVersion: gateway.kyma-project.io/v2alpha1
+kind: APIRule
+metadata:
+  labels:
+    app.kubernetes.io/name: policy-reporter-ui
+  name: policy-reporter-ui
+  namespace: policy-reporter
+spec:
+  gateway: kyma-system/kyma-gateway
+  hosts:
+    - policy-reporter-ui
+  rules:
+    - methods:
+        - GET
+      noAuth: true
+      path: /*
+      service:
+        name: policy-reporter-ui
+        port: 8080
+  service:
+    name: policy-reporter-ui
+    port: 8080

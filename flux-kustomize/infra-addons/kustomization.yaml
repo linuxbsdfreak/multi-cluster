@@ -4,7 +4,8 @@ resources:
   - eso-helm-repo.yaml
   - eso-helm-release.yaml
   - policy-reporter-helm-repo.yaml
-  - policy-reporter-helm-release.yaml  
+  - policy-reporter-helm-release.yaml
+  - policy-reporter-ui.yaml
 
 patches:
   - path: eso-helm-release.yaml
