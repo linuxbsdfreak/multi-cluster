@@ -63,6 +63,11 @@ webhooksCleanup:
     pullPolicy: IfNotPresent
 
 admissionController:
+  podAnnotations:
+    metrics.dynatrace.com/scrape: 'true'
+    metrics.dynatrace.com/path: '/path/to-metrics'
+    metrics.dynatrace.com/port: '9001'
+    metrics.dynatrace.com/secure: 'false'
   replicas: 1
   podAntiAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
@@ -140,6 +145,11 @@ admissionController:
         type: RuntimeDefault
 
 backgroundController:
+  podAnnotations:
+    metrics.dynatrace.com/scrape: 'true'
+    metrics.dynatrace.com/path: '/metrics'
+    metrics.dynatrace.com/port: '8000'
+    metrics.dynatrace.com/secure: 'false'
   replicas: 1
   podAntiAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
@@ -266,6 +276,11 @@ securityContext:
     type: RuntimeDefault
 
 cleanupController:
+  podAnnotations:
+    metrics.dynatrace.com/scrape: 'true'
+    metrics.dynatrace.com/path: '/metrics'
+    metrics.dynatrace.com/port: '8000'
+    metrics.dynatrace.com/secure: 'false'
   replicas: 1
   podAntiAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
@@ -312,6 +327,11 @@ cleanupController:
       type: RuntimeDefault
 
 reportsController:
+  podAnnotations:
+    metrics.dynatrace.com/scrape: 'true'
+    metrics.dynatrace.com/path: '/metrics'
+    metrics.dynatrace.com/port: '8000'
+    metrics.dynatrace.com/secure: 'false'
   replicas: 1
   podAntiAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
