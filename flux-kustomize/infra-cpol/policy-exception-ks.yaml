@@ -1,0 +1,19 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: policy-exception-ks
+  namespace: kyverno-policies
+spec:
+  targetNamespace: default
+  interval: 5m
+  timeout: 10m
+  path: "./flux-kustomize/infra-cpol/cpol-manifests/"
+  wait: true
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: infra-repo
+  kubeConfig:
+    secretRef:
+      key: kubeconfig
+      name: ${KUBECONFIG_PATH:admin-kubeconfig-kyma-dev-eu12-poc-pls}

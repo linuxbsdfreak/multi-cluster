@@ -1,0 +1,46 @@
+apiVersion: kyverno.io/v2
+kind: PolicyException
+metadata:
+  name: namespace-exception
+  namespace: kyverno
+spec:
+  exceptions:
+  - policyName: generate-namespaced-resources
+    ruleNames:
+    - generate-service-account
+    - generate-secret
+    - generate-role
+    - generate-rolebinding
+    - generate-configmap
+    - generate-job
+  - policyName: generate-eso-vault-jwt-resources
+    ruleNames:
+    - generate-eso-vault-sa
+    - generate-eso-vault-cluster-role
+    - generate-eso-vault-cluster-role-binding
+    - generate-refresh-jwt-token-job
+  - policyName: require-requests-limits
+    ruleNames:
+    - validate-resources
+  - policyName: sync-registry-credential
+    ruleNames:
+    - sync-image-pull-secret
+  - policyName: disallow-latest-tag
+    ruleNames:
+    - require-image-tag
+    - validate-image-tag
+  - policyName: sync-registry-credentials
+    ruleNames:
+    - sync-image-pull-secret
+  match:
+    any:
+    - resources:
+        kinds:
+        - Namespace
+        names:
+        - kyverno
+        - kube-system
+        - istio-system
+        - kube-public
+        - kyma-system
+        - kube-public

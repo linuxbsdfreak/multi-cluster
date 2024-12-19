@@ -3,6 +3,8 @@ kind: Kustomization
 resources:
   - kyverno-policies-helm-repo.yaml
   - kyverno-policies-helm-release.yaml
+  - policy-exception-ks.yaml
+  - cpol-manifests 
 
 patches:
   - path: kyverno-policies-helm-release.yaml
